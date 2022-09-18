@@ -1,0 +1,25 @@
+FROM alpine as alpine-builder
+# 参数: docker build时,有效
+ARG a1=/src
+# 参数: docker run时, 有效
+ENV e1=1111
+
+# 拷贝本地的REAME.md文件到docker的/src文件夹下
+COPY ./README.md ${a1}/
+
+# 创建两个文件夹,并且里面存放一个1.md的文件
+RUN mkdir -p ${a1}/inputs \
+    && mkdir -p ${a1}/outputs \
+    && touch ${a1}/inputs/1.md \
+    && touch ${a1}/outputs/1.md
+
+# 容器启动是, 执行命令,会在该目录下执行
+WORKDIR /src
+
+ENTRYPOINT [ "sh","-c" ]
+CMD [ "echo a1:${a1},e1:${e1} && ls -lR" ]
+
+# CMD [ "sh","-c","pwd && echo a1:${a1},e1:${e1} && ls -lR" ]
+
+
+
